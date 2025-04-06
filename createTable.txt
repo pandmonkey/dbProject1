@@ -1,0 +1,42 @@
+-- 用户表
+CREATE TABLE user_tb (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    姓名 VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+-- 博客表
+CREATE TABLE blog_tb (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    图片URL VARCHAR(255) NOT NULL,
+    时间 DATETIME NOT NULL,
+    文字内容 TEXT NOT NULL
+) ENGINE=InnoDB;
+
+-- 评论表
+CREATE TABLE comment_tb (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    时间 DATETIME NOT NULL,
+    内容 TEXT NOT NULL
+) ENGINE=InnoDB;
+
+-- 博客发布关系表（用户与博客的关联）
+CREATE TABLE post_blog_table (
+    用户ID INT NOT NULL,
+    blogID INT NOT NULL UNIQUE, -- 确保一个博客只能被一个用户发布
+    时间 DATETIME NOT NULL,
+    PRIMARY KEY (用户ID, blogID),
+    FOREIGN KEY (用户ID) REFERENCES user_tb(ID),
+    FOREIGN KEY (blogID) REFERENCES blog_tb(ID)
+) ENGINE=InnoDB;
+
+-- 评论发布关系表（用户与评论的关联）
+CREATE TABLE post_comments_table (
+    用户ID INT NOT NULL,
+    blogID INT NOT NULL,
+    commentID INT NOT NULL UNIQUE, -- 确保一个评论只能属于一个用户
+    PRIMARY KEY (用户ID, blogID, commentID),
+    FOREIGN KEY (用户ID) REFERENCES user_tb(ID),
+    FOREIGN KEY (blogID) REFERENCES blog_tb(ID),
+    FOREIGN KEY (commentID) REFERENCES comment_tb(ID)
+) ENGINE=InnoDB;
